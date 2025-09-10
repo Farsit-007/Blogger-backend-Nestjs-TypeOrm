@@ -1,0 +1,7 @@
+PATCH http://localhost:5000/users/
+Content-Type : application/json
+
+{
+    "firstName" : "Farsit",
+    "lastName"  : "Kalam"
+}
