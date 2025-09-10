@@ -31,7 +31,6 @@ export class Tag {
   @Column({
     type: 'text',
     nullable: true,
-    length: 512,
   })
   description?: string;
 
