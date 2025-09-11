@@ -5,21 +5,16 @@ Content-Type : application/json
 {
   "title": "My First Blog Post",
   "postType": "post", 
-  "slug": "my-first-blog-post",
+  "slug": "my-first-blog-post-3",
   "status": "draft",
   "content": "This is the content of the blog post.",
   "schema": "{\"type\":\"article\",\"author\":\"Robayat\"}",
   "featuredImageUrl": "https://example.com/images/post1.jpg",
   "publishOn": "2025-09-08T10:30:00.000Z",
-  "tags": ["tech", "blogging", "nestjs"],
-  "metaOptions": [
+  // "tags": ["tech", "blogging", "nestjs"],
+  "metaOptions": 
     {
-      "key": "seoTitle",
-      "value": "Best Blog Post on Tech"
-    },
-    {
-      "key": "seoDescription",
-      "value": "This blog post is about technology and NestJS."
-    }
-  ]
+  "metaValue" : "{\"sidebarEnabled\" : true, \"footerActive\" : true}"
+}
+  
 }
