@@ -51,7 +51,7 @@ export class UsersController {
 
   @Get('/:id')
   public getSingleUsers(@Param('id', ParseIntPipe) id: string) {
-    return this.usersService.findOneById(id);
+    return this.usersService.findOneByIds(id);
   }
 
   @Post()

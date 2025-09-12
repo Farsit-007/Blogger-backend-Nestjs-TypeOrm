@@ -4,7 +4,6 @@ import { CreatePostDto } from '../dtos/create-post.dto';
 import { Repository } from 'typeorm';
 import { Post } from './post.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { MetaOptions } from 'src/meta-options/providers/meta-options.entity';
 
 @Injectable()
 export class PostsService {
@@ -13,21 +12,28 @@ export class PostsService {
 
     @InjectRepository(Post)
     private readonly postsRepository: Repository<Post>,
-
-    @InjectRepository(MetaOptions)
-    private readonly metaOptionsRepository: Repository<MetaOptions>,
   ) {}
 
   public async create(createPostDto: CreatePostDto) {
+    // Find author from dayabase based on authorId
+    const author = await this.usersService.findOneById(createPostDto.authorId);
+
     // Create Post
-    const post = this.postsRepository.create(createPostDto);
+    const post = this.postsRepository.create({
+      ...createPostDto,
+      author: author!,
+    });
     // return the post
     return await this.postsRepository.save(post);
   }
 
   public async findAll(userId: string) {
-    const user = this.usersService.findOneById(userId);
-    const post = await this.postsRepository.find();
+    const post = await this.postsRepository.find({
+      relations: {
+        metaOptions: true,
+        author: true,
+      },
+    });
     return post;
   }
 

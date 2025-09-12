@@ -1,6 +1,7 @@
 import {
   Column,
   Entity,
+  JoinColumn,
   ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
@@ -71,8 +72,6 @@ export class Post {
   })
   publishOn: Date;
 
-  @ManyToOne(() => User, (user) => user.posts)
-  author: User;
   // Work on there in the lecture on relationships
   tags?: string[];
 
@@ -81,4 +80,6 @@ export class Post {
     eager: true,
   })
   metaOptions?: MetaOptions;
+  @ManyToOne(() => User, (user) => user.posts)
+  author: User;
 }

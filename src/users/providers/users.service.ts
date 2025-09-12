@@ -53,7 +53,7 @@ export class UsersService {
   /**
    * To single user from the databse
    */
-  public findOneById(id: string) {
+  public findOneByIds(id: string) {
     return {
       firstName: 'John',
       email: 'john@gmail.com',
@@ -65,5 +65,10 @@ export class UsersService {
    */
   public updateUsers(updateUserDto: PatchUserDto) {
     return updateUserDto;
+  }
+  public async findOneById(id: number) {
+    return await this.usersRepository.findOneBy({
+      id,
+    });
   }
 }

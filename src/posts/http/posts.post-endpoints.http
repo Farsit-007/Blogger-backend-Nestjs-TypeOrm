@@ -5,7 +5,7 @@ Content-Type : application/json
 {
   "title": "My First Blog Post",
   "postType": "post", 
-  "slug": "my-first-blog-post-3",
+  "slug": "my-first-blog-post-10",
   "status": "draft",
   "content": "This is the content of the blog post.",
   "schema": "{\"type\":\"article\",\"author\":\"Robayat\"}",
@@ -15,6 +15,8 @@ Content-Type : application/json
   "metaOptions": 
     {
   "metaValue" : "{\"sidebarEnabled\" : true, \"footerActive\" : true}"
-}
+  
+},
+"authorId" : 1
   
 }
