@@ -3,8 +3,9 @@ import { CreateUserDto } from '../dtos/create-user.dto';
 import { PatchUserDto } from '../dtos/patch-user-dto';
 
 import { Repository } from 'typeorm';
-import { User } from './user.entity';
+import { User } from '../user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
+import { ConfigService } from '@nestjs/config';
 
 /**
  * Class to connect to users table and perform business operations
@@ -15,6 +16,8 @@ export class UsersService {
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
+
+    private readonly configService: ConfigService,
   ) {}
 
   /**

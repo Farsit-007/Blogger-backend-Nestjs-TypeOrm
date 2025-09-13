@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreatePostMetaOptionsDto } from '../dtos/create-post-meta-options.dto';
 import { Repository } from 'typeorm';
-import { MetaOptions } from './meta-options.entity';
+import { MetaOptions } from '../meta-options.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()

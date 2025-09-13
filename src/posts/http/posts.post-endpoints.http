@@ -5,13 +5,13 @@ Content-Type : application/json
 {
   "title": "My First Blog Post",
   "postType": "post", 
-  "slug": "my-first-blog-post-10",
+  "slug": "my-first-blog-post-142",
   "status": "draft",
   "content": "This is the content of the blog post.",
   "schema": "{\"type\":\"article\",\"author\":\"Robayat\"}",
   "featuredImageUrl": "https://example.com/images/post1.jpg",
   "publishOn": "2025-09-08T10:30:00.000Z",
-  // "tags": ["tech", "blogging", "nestjs"],
+  "tags": [1,2],
   "metaOptions": 
     {
   "metaValue" : "{\"sidebarEnabled\" : true, \"footerActive\" : true}"

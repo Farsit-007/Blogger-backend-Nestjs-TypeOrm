@@ -2,6 +2,7 @@ PATCH http://localhost:5000/posts
 Content-Type : application/json
 
 {
-    "id" : 123,
-     "postType" : "post"
+    "id" : 7,
+    "title" : "Next js",
+    "postType" : "post"
 }
