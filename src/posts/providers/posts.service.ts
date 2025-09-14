@@ -1,4 +1,10 @@
-import { Body, Injectable } from '@nestjs/common';
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import {
+  BadRequestException,
+  Body,
+  Injectable,
+  RequestTimeoutException,
+} from '@nestjs/common';
 import { UsersService } from 'src/users/providers/users.service';
 import { CreatePostDto } from '../dtos/create-post.dto';
 import { Repository } from 'typeorm';
@@ -6,6 +12,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { TagsService } from 'src/tags/providers/tags.service';
 import { PatchPostDto } from '../dtos/patch-post.dto';
 import { Post } from '../post.entity';
+import { Tag } from 'src/tags/tags.entity';
 
 @Injectable()
 export class PostsService {
@@ -27,7 +34,7 @@ export class PostsService {
     // Create Post
     const post = this.postsRepository.create({
       ...createPostDto,
-      author: author!,
+      author: author,
       tags: tags,
     });
     // return the post
@@ -47,17 +54,42 @@ export class PostsService {
 
   public async update(patchPostDto: PatchPostDto) {
     // Find the Tags
-    const tags = await this.tagService.findmultiplesTags(
-      patchPostDto.tags ?? [],
-    );
+    let tags: Tag[] | undefined = undefined;
+    let post: Post | null = null;
+    try {
+      tags = await this.tagService.findmultiplesTags(patchPostDto.tags ?? []);
+    } catch (error) {
+      throw new RequestTimeoutException(
+        'Unable to process your request at the moment please try later',
+        {
+          description: 'Error connecting to the database',
+        },
+      );
+    }
+    if (!tags || tags?.length !== patchPostDto.tags?.length) {
+      throw new BadRequestException(
+        'Please check your tag It and ensure tghey are correct',
+      );
+    }
 
     // Find the Post
-    const post = await this.postsRepository.findOneBy({
-      id: patchPostDto.id,
-    });
+    try {
+      post = await this.postsRepository.findOneBy({
+        id: patchPostDto.id,
+      });
+    } catch (error) {
+      throw new RequestTimeoutException(
+        'Unable to process your request at the moment please try later',
+        {
+          description: 'Error connecting to the database',
+        },
+      );
+    }
 
     if (!post) {
-      throw new Error(`Post with id ${patchPostDto.id} not found`);
+      throw new BadRequestException(
+        `Post with id ${patchPostDto.id} not found`,
+      );
     }
 
     // Update the properties
@@ -72,8 +104,18 @@ export class PostsService {
     // Assign the new tags
     post.tags = tags;
 
+    try {
+      post = await this.postsRepository.save(post);
+    } catch (error) {
+      throw new RequestTimeoutException(
+        'Unable to process your request at the moment please try later',
+        {
+          description: 'Error connecting to the database',
+        },
+      );
+    }
     // Save the post and return
-    return await this.postsRepository.save(post);
+    return post;
   }
 
   public async delete(id: number) {
