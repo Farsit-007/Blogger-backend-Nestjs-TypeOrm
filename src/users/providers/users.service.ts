@@ -9,7 +9,7 @@ import {
 import { CreateUserDto } from '../dtos/create-user.dto';
 import { PatchUserDto } from '../dtos/patch-user-dto';
 
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { User } from '../user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ConfigService } from '@nestjs/config';
@@ -26,6 +26,7 @@ export class UsersService {
     private usersRepository: Repository<User>,
 
     private readonly configService: ConfigService,
+    private readonly dataSource: DataSource,
   ) {}
 
   /**
@@ -125,5 +126,30 @@ export class UsersService {
       throw new BadRequestException('The user id is not found ', {});
     }
     return user;
+  }
+
+  public async createMany(createUserDto: CreateUserDto[]) {
+    const newUsers: User[] = [];
+    // Create Query Runner Instance
+    const queryRunner = this.dataSource.createQueryRunner();
+    // Connect Query Runner to database
+    await queryRunner.connect();
+    // Start Transaction
+    await queryRunner.startTransaction();
+    try {
+      for (const user of createUserDto) {
+        const newUser = queryRunner.manager.create(User, user);
+        const result = await queryRunner.manager.save(newUser);
+        newUsers.push(result);
+      }
+      // If successful commit
+      await queryRunner.commitTransaction();
+    } catch (error) {
+      // If unsuccessful rollback
+      await queryRunner.rollbackTransaction();
+    } finally {
+      // Release connection
+      await queryRunner.release();
+    }
   }
 }
