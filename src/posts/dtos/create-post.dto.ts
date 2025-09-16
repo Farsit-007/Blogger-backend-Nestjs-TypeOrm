@@ -1,5 +1,6 @@
 import {
   IsArray,
+  IsDate,
   IsEnum,
   IsInt,
   IsISO8601,
@@ -82,7 +83,7 @@ export class CreatePostDto {
     description: 'This is a publish date of a post',
     example: '2025-09-08T10:30:00.000Z',
   })
-  @IsISO8601()
+  @IsDate()
   publishOn: Date;
 
   @ApiPropertyOptional({

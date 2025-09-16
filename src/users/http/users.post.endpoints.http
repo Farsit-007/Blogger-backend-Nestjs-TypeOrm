@@ -7,3 +7,36 @@ Content-Type : application/json
     "email" : "robayatfarsit@gmail.com",
     "password" : "Farsit@2025"
 }
+
+
+POST http://localhost:5000/users/create-many
+Content-Type : application/json
+
+{
+    "users" : [
+    {
+    "firstName" : "Farsit",
+    "lastName"  : "Kalam",
+    "email" : "robayatfarsit1@gmail.com",
+    "password" : "Farsit@2025"
+},
+{
+    "firstName" : "Farsit1",
+    "lastName"  : "Kalam",
+    "email" : "robayatfarsit2@gmail.com",
+    "password" : "Farsit@2025"
+},
+{
+    "firstName" : "Farsit2",
+    "lastName"  : "Kalam",
+    "email" : "robayatfarsit3@gmail.com",
+    "password" : "Farsit@2025"
+},
+{
+    "firstName" : "Farsit3",
+    "lastName"  : "Kalam",
+    "email" : "robayatfarsit4@gmail.com",
+    "password" : "Farsit@2025"
+}
+]
+}

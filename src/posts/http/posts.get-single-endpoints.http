@@ -4,8 +4,8 @@
    exports.endDate = date.toString()
 }}
 
-GET http://localhost:5000/posts
+GET http://localhost:5000/posts/5
 ?startDate={{startDate}}
 &endDate={{endDate}}
-&limit=10
+&limit=2
 &page=1
