@@ -8,10 +8,16 @@ import { UserCreateManyProvider } from './providers/user-create-many.provider';
 import profileConfig from './config/profile.config';
 import { AuthModule } from 'src/auth/auth.module';
 import { CreateUserProvider } from './providers/create-user.provider';
+import { FindOneUserByEmailProvider } from './providers/find-one-user-by-email.provider';
 
 @Module({
   controllers: [UsersController],
-  providers: [UsersService, UserCreateManyProvider, CreateUserProvider],
+  providers: [
+    UsersService,
+    UserCreateManyProvider,
+    CreateUserProvider,
+    FindOneUserByEmailProvider,
+  ],
   exports: [UsersService],
   imports: [
     TypeOrmModule.forFeature([User]),
