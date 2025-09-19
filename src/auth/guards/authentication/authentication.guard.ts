@@ -1,13 +1,13 @@
+/* eslint-disable no-unused-labels */
+/* eslint-disable @typescript-eslint/no-unused-expressions */
 import {
   CanActivate,
   ExecutionContext,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-
 import { AccessTokenGuard } from '../access-token/access-token.guard';
 import { AuthType } from 'src/auth/enums/auth-type.enum';
-import { Observable } from 'rxjs';
 import { Reflector } from '@nestjs/core';
 import { AUTH_TYPE_KEY } from 'src/auth/constants/auth.constants';
 
@@ -49,7 +49,7 @@ export class AuthenticationGuard implements CanActivate {
     for (const instance of guards) {
       const canActivate = await Promise.resolve(
         instance.canActivate(context),
-      ).catch((err) => {
+      ).catch((err: any) => {
         error: err;
       });
       if (canActivate) {
