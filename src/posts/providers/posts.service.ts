@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   BadRequestException,
-  Body,
   Injectable,
   RequestTimeoutException,
 } from '@nestjs/common';
@@ -16,6 +15,8 @@ import { Tag } from 'src/tags/tags.entity';
 import { GetPostsDto } from '../dtos/get-posts.dto';
 import { PaginationProvider } from 'src/common/pagination/providers/pagination.provider';
 import { Paginated } from 'src/common/pagination/interfaces/paginated.interface';
+import { ActiveUserInterface } from 'src/auth/interfaces/active-user.interface';
+import { CreatePostProvider } from './create-post.provider';
 
 @Injectable()
 export class PostsService {
@@ -27,22 +28,11 @@ export class PostsService {
 
     private readonly tagService: TagsService,
     private readonly paginationProvider: PaginationProvider,
+    private readonly createPostProvider: CreatePostProvider,
   ) {}
 
-  public async create(createPostDto: CreatePostDto) {
-    // Find author from dayabase based on authorId
-    const author = await this.usersService.findOneById(createPostDto.authorId);
-
-    const tags = await this.tagService.findmultiplesTags(createPostDto.tags!);
-
-    // Create Post
-    const post = this.postsRepository.create({
-      ...createPostDto,
-      author: author,
-      tags: tags,
-    });
-    // return the post
-    return await this.postsRepository.save(post);
+  public async create(createPostDto: CreatePostDto, user: ActiveUserInterface) {
+    return await this.createPostProvider.create(createPostDto, user);
   }
 
   public async findAll(postQuery: GetPostsDto): Promise<Paginated<Post>> {
