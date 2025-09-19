@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import {
   CanActivate,
@@ -43,5 +44,6 @@ export class AccessTokenGuard implements CanActivate {
   }
   private extractRequestFromHeader(request: Request) {
     const [_, token] = request.headers.authorization?.split(' ') ?? [];
+    return token;
   }
 }
