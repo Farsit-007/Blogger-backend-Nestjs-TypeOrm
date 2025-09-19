@@ -44,7 +44,13 @@ export class CreatePostProvider {
       author: author,
       tags: tags,
     });
-    // return the post
-    return await this.postsRepository.save(post);
+    try {
+      // return the post
+      return await this.postsRepository.save(post);
+    } catch (error) {
+      throw new ConflictException(error, {
+        description: 'Ensure post slug is unique and not a duplicate',
+      });
+    }
   }
 }
