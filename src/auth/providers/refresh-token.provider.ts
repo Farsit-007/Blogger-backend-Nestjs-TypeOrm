@@ -26,14 +26,13 @@ export class RefreshTokenProvider {
   public async refreshTokens(refreshTokenDto: RefreshTokenDto) {
     try {
       // Verify the refresh token using jwtService
-      const { sub } = await this.jwtService.verifyAsync<ActiveUserInterface>(
-        refreshTokenDto.refreshToken,
-        {
-          secret: this.jwtConfiguration.secret,
-          audience: this.jwtConfiguration.audience,
-          issuer: this.jwtConfiguration.issuer,
-        },
-      );
+      const { sub } = await this.jwtService.verifyAsync<
+        Pick<ActiveUserInterface, 'sub'>
+      >(refreshTokenDto.refreshToken, {
+        secret: this.jwtConfiguration.secret,
+        audience: this.jwtConfiguration.audience,
+        issuer: this.jwtConfiguration.issuer,
+      });
       // Fetch user from the database
       const user = await this.usersService.findOneById(sub);
       // Generate the tokens
