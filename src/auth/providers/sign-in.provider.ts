@@ -8,10 +8,7 @@ import {
 import { SigninDto } from '../dto/signin.dto';
 import { UsersService } from 'src/users/providers/users.service';
 import { HashingProvider } from './hashing.provider';
-import { JwtService } from '@nestjs/jwt';
-import type { ConfigType } from '@nestjs/config';
-import jwtConfig from '../config/jwt.config';
-import { ActiveUserInterface } from '../interfaces/active-user.interface';
+
 import { GenerateTokensProvider } from './generate-tokens.provider';
 
 @Injectable()
@@ -21,10 +18,6 @@ export class SignInProvider {
     private readonly userService: UsersService,
 
     private readonly hashingProvider: HashingProvider,
-
-    private readonly jwtService: JwtService,
-    @Inject(jwtConfig.KEY)
-    private readonly jwtConfiguration: ConfigType<typeof jwtConfig>,
 
     private readonly generateTokensProvider: GenerateTokensProvider,
   ) {}
