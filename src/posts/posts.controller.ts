@@ -46,7 +46,7 @@ export class PostsController {
   }
 
   @ApiOperation({
-    summary: 'Updated a blog post',
+    summary: 'Updated a blog posts',
   })
   @ApiResponse({
     status: 200,
