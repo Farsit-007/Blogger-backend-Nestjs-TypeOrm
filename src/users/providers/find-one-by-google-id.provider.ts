@@ -9,4 +9,7 @@ export class FindOneByGoogleIdProvider {
     @InjectRepository(User)
     private readonly usersRepository: Repository<User>,
   ) {}
+  public async findOneByGoogleId(googleId: string) {
+    return await this.usersRepository.findOneBy({ googleId });
+  }
 }
