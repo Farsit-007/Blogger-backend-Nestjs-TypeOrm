@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import {
   forwardRef,
   Inject,
@@ -6,7 +7,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import type { ConfigType } from '@nestjs/config';
-import { OAuth2Client } from 'google-auth-library';
+import { OAuth2Client, TokenPayload } from 'google-auth-library';
 import jwtConfig from 'src/auth/config/jwt.config';
 import { GoogleTokenDto } from '../dtos/google-token.dto';
 import { UsersService } from 'src/users/providers/users.service';
@@ -31,36 +32,47 @@ export class GoogleAuthenticationService implements OnModuleInit {
 
   public async authenticate(googletokenDto: GoogleTokenDto) {
     try {
-      // Verify the google token sent by User
       const loginTicket = await this.oauthClient.verifyIdToken({
         idToken: googletokenDto.token,
+        audience: this.jwtConfiguration.googleClientId,
       });
-      // Extract the payload from Google JWT
+
+      const payload = loginTicket.getPayload() as
+        | (TokenPayload & {
+            given_name?: string;
+            family_name?: string;
+          })
+        | null;
+
+      if (!payload) {
+        throw new UnauthorizedException('Invalid Google token');
+      }
+
       const {
         email,
         sub: googleId,
         given_name: firstName,
         family_name: lastName,
-      } = loginTicket.getPayload();
-      // Find the user in the databse using the GoogleId
-      const user = await this.usersService.findOneByGoogleId(
-        googleId as string,
-      );
-      // If googleId exists generate token
+      } = payload;
+
+      const user = await this.usersService.findOneByGoogleId(googleId);
+
       if (user) {
         return this.generateTokensProvider.generateTokens(user);
       }
-      // If not create new user and then generate tokens
+
       const newUser = await this.usersService.cretaeGoogleUser({
-        email: email,
-        firstName: firstName,
-        lastName: lastName,
-        googleId: googleId,
+        email: email ?? '',
+        firstName: firstName ?? '',
+        lastName: lastName ?? '',
+        googleId: googleId ?? '',
       });
       return this.generateTokensProvider.generateTokens(newUser);
     } catch (error) {
-      // Throw Unauthorized exceptions
-      throw new UnauthorizedException(error);
+      if (error instanceof Error) {
+        throw new UnauthorizedException(error.message);
+      }
+      throw new UnauthorizedException('Google authentication failed');
     }
   }
 }
