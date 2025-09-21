@@ -1,15 +1,20 @@
-import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
+import { forwardRef, Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import type { ConfigType } from '@nestjs/config';
 import { OAuth2Client } from 'google-auth-library';
 import jwtConfig from 'src/auth/config/jwt.config';
 import { GoogleTokenDto } from '../dtos/google-token.dto';
+import { UsersService } from 'src/users/providers/users.service';
+import { GenerateTokensProvider } from 'src/auth/providers/generate-tokens.provider';
 
 @Injectable()
 export class GoogleAuthenticationService implements OnModuleInit {
   private oauthClient: OAuth2Client;
   constructor(
+    @Inject(forwardRef(() => UsersService))
+    private readonly usersService: UsersService,
     @Inject(jwtConfig.KEY)
     private readonly jwtConfiguration: ConfigType<typeof jwtConfig>,
+    private readonly generateTokensProvider: GenerateTokensProvider,
   ) {}
 
   onModuleInit() {
@@ -18,11 +23,19 @@ export class GoogleAuthenticationService implements OnModuleInit {
     this.oauthClient = new OAuth2Client(clientId, clientSecret);
   }
 
-  public async authentication(googletokenDto: GoogleTokenDto) {
+  public async authenticate(googletokenDto: GoogleTokenDto) {
     // Verify the google token sent by User
+    const loginTicket = await this.oauthClient.verifyIdToken({
+      idToken: googletokenDto.token,
+    });
     // Extract the payload from Google JWT
+    const { email, sub: googleId } = loginTicket.getPayload();
     // Find the user in the databse using the GoogleId
+    const user = await this.usersService.findOneByGoogleId(googleId as string);
     // If googleId exists generate token
+    if (user) {
+      return this.generateTokensProvider.generateTokens(user);
+    }
     // If not create new user and then generate tokens
     // Throw Unauthorized exceptions
   }
