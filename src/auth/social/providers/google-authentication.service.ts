@@ -29,7 +29,12 @@ export class GoogleAuthenticationService implements OnModuleInit {
       idToken: googletokenDto.token,
     });
     // Extract the payload from Google JWT
-    const { email, sub: googleId } = loginTicket.getPayload();
+    const {
+      email,
+      sub: googleId,
+      given_name: firstName,
+      family_name: lastName,
+    } = loginTicket.getPayload();
     // Find the user in the databse using the GoogleId
     const user = await this.usersService.findOneByGoogleId(googleId as string);
     // If googleId exists generate token
