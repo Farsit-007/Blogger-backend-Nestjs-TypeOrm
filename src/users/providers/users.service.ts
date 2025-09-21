@@ -9,11 +9,10 @@ import {
 import { CreateUserDto } from '../dtos/create-user.dto';
 import { PatchUserDto } from '../dtos/patch-user-dto';
 
-import { DataSource, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { User } from '../user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ConfigService } from '@nestjs/config';
-import { error } from 'console';
+
 import { UserCreateManyProvider } from './user-create-many.provider';
 import { CreateManyUsersDto } from '../dtos/create-many-users.dto';
 import { CreateUserProvider } from './create-user.provider';
@@ -30,8 +29,6 @@ export class UsersService {
     @InjectRepository(User)
     private usersRepository: Repository<User>,
 
-    private readonly configService: ConfigService,
-    private readonly dataSource: DataSource,
     private readonly usersCreateManyProvider: UserCreateManyProvider,
     private readonly createUserProvider: CreateUserProvider,
     private readonly findOneUserByEmailProvider: FindOneUserByEmailProvider,
