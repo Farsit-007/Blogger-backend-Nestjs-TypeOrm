@@ -4,11 +4,15 @@ import {
   Injectable,
   NestInterceptor,
 } from '@nestjs/common';
-import { Observable, tap } from 'rxjs';
+import { Observable, map } from 'rxjs';
 
 @Injectable()
 export class DataResponseInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
-    return next.handle().pipe(tap(data)=>);
+    return next.handle().pipe(
+      map((data) => ({
+        data: data,
+      })),
+    );
   }
 }
