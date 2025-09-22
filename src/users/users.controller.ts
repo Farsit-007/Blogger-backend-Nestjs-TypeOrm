@@ -8,7 +8,8 @@ import {
   ParseIntPipe,
   DefaultValuePipe,
   Patch,
-  SetMetadata,
+  UseInterceptors,
+  ClassSerializerInterceptor,
 } from '@nestjs/common';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { PatchUserDto } from './dtos/patch-user-dto';
@@ -63,6 +64,7 @@ export class UsersController {
   @Post()
   // @SetMetadata('authType', 'none')
   @Auth(AuthType.None, AuthType.Bearer)
+  @UseInterceptors(ClassSerializerInterceptor)
   public createUser(@Body() createUserDto: CreateUserDto) {
     return this.usersService.createUser(createUserDto);
   }
